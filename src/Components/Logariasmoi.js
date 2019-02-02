@@ -4,7 +4,6 @@ import { Grid, GridColumn as Column } from '@progress/kendo-react-grid';
 import { DatePicker } from '@progress/kendo-react-dateinputs';
 import { Input, NumericTextBox } from '@progress/kendo-react-inputs';
 import DropDown from './UI/DropDown';
-import '@progress/kendo-theme-bootstrap/dist/all.css';
 import Loading from './UI/Loading.js';
 import { cloneDeep } from 'lodash';
 import cellWithForea from './UI/ForeasCell';
@@ -65,7 +64,14 @@ class Logariasmoi extends React.Component{
       if(response.data.success===true){
         this.setState({
           loading:true,
-          insert:{}
+          insert:{
+            id:0,
+            foreas:0,
+            datePrinted:null,
+            datePayed:null,
+            amount:0,
+            notes:''
+          }
         });
         this.getData();
       }

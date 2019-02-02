@@ -4,7 +4,6 @@ import { Grid, GridColumn as Column } from '@progress/kendo-react-grid';
 import { DatePicker } from '@progress/kendo-react-dateinputs';
 import { Input, NumericTextBox } from '@progress/kendo-react-inputs';
 import DropDown from './UI/DropDown';
-import '@progress/kendo-theme-bootstrap/dist/all.css';
 import Loading from './UI/Loading.js';
 import { cloneDeep } from 'lodash';
 import AgoresCell from './UI/AgoresCell';
@@ -39,7 +38,7 @@ class Agores extends React.Component{
     axios.get('api/getAgores').then(response=>{
       const agores= response.data.data.sort((a,b)=>(new Date(a.date) - new Date(b.date)))
         .map(entry=>({...entry, ...{
-        date: format(new Date(entry.date),"dd/MM/yyyy")
+        date: entry.date&&format(new Date(entry.date),"dd/MM/yyyy")
       }}));
       this.setState({
         agores:agores,
@@ -62,7 +61,15 @@ class Agores extends React.Component{
     axios.post('api/newAgora',newInsert).then(response=>{
       if(response.data.success===true){
         this.setState({
-          loading:true
+          loading:true,
+          insert:{
+            id:0,
+            category:0,
+            date:null,
+            amount:0,
+            description:'',
+            notes:''
+          }
         });
         this.getData();
       }

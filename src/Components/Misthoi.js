@@ -4,7 +4,6 @@ import { Grid, GridColumn as Column } from '@progress/kendo-react-grid';
 import { DatePicker } from '@progress/kendo-react-dateinputs';
 import { Input, NumericTextBox } from '@progress/kendo-react-inputs';
 import DropDown from './UI/DropDown';
-import '@progress/kendo-theme-bootstrap/dist/all.css';
 import Loading from './UI/Loading.js';
 import { cloneDeep } from 'lodash';
 import cellWithAmount from './UI/AmountCell';

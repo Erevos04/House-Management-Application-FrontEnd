@@ -4,7 +4,6 @@ import { Grid, GridColumn as Column } from '@progress/kendo-react-grid';
 import { DatePicker } from '@progress/kendo-react-dateinputs';
 import { Input, NumericTextBox } from '@progress/kendo-react-inputs';
 import DropDown from './UI/DropDown';
-import '@progress/kendo-theme-bootstrap/dist/all.css';
 import Loading from './UI/Loading.js';
 import { cloneDeep } from 'lodash';
 import AutoCell from './UI/AutoCell';
@@ -37,7 +36,7 @@ class Autokinito extends React.Component{
     axios.get('api/getAutokinito').then(response=>{
       const autokinito= response.data.data.sort((a,b)=>(new Date(a.date) - new Date(b.date)))
         .map(entry=>( {...entry, ...{
-        date: format(new Date(entry.date),"dd/MM/yyyy")
+        date: entry.date&&format(new Date(entry.date),"dd/MM/yyyy")
       }}));
       this.setState({
         autoExpenses:autokinito,
@@ -60,7 +59,15 @@ class Autokinito extends React.Component{
     axios.post('api/newAutokinito',newInsert).then(response=>{
       if(response.data.success===true){
         this.setState({
-          loading:true
+          loading:true,
+          insert:{
+            id:0,
+            category:0,
+            date:null,
+            amount:0,
+            notes:''
+          }
+
         });
         this.getData();
       }
@@ -96,7 +103,7 @@ class Autokinito extends React.Component{
               <div className="row">
                 <div className="col-lg-6">
                 <label className='label'>Ημερομηνία</label>
-                  <DatePicker format='dd/MM/yyyy' style={{width:"100%"}} value={insert.date} onChange={this.onChange}/>
+                  <DatePicker name='date' format='dd/MM/yyyy' style={{width:"100%"}} value={insert.date} onChange={this.onChange}/>
 
                 </div>
               </div>

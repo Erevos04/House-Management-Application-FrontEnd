@@ -4,7 +4,6 @@ import { Grid, GridColumn as Column, GridDetailRow } from '@progress/kendo-react
 import { DatePicker } from '@progress/kendo-react-dateinputs';
 import { Input, NumericTextBox } from '@progress/kendo-react-inputs';
 import DropDown from './UI/DropDown';
-import '@progress/kendo-theme-bootstrap/dist/all.css';
 import Loading from './UI/Loading.js';
 import { cloneDeep, sumBy } from 'lodash';
 import cellWithAmount from './UI/AmountCell';
@@ -23,9 +22,9 @@ class DetailComponent extends GridDetailRow {
         <Grid
           data={data}
           >
-            <Column title="Κατηγορία" field="category" cell={cellWithDept} />
-            <Column title="Επιμέρους Ποσό" field="amount" cell={cellWithAmount}/>
-          </Grid>
+          <Column title="Κατηγορία" field="category" cell={cellWithDept} />
+          <Column title="Επιμέρους Ποσό" field="amount" cell={cellWithAmount}/>
+        </Grid>
       );
   }
 }
@@ -57,7 +56,7 @@ class Supermarket extends React.Component{
     axios.get('api/getSupermarket').then(response=>{
       const supermarket= response.data.data.sort((a,b)=>(new Date(a.date) - new Date(b.date)))
         .map(entry=>( {...entry, ...{
-          date: format(new Date(entry.date),"dd/MM/yyyy")
+          date: entry.date&&format(new Date(entry.date),"dd/MM/yyyy")
       }}));
       this.setState({
         supermarket:supermarket,
@@ -67,9 +66,9 @@ class Supermarket extends React.Component{
   }
 
   expandChange = (event) => {
-        event.dataItem.expanded = !event.dataItem.expanded;
-        this.forceUpdate();
-    }
+    event.dataItem.expanded = !event.dataItem.expanded;
+    this.forceUpdate();
+  }
 
   onChange=(e)=>{
     let temp = cloneDeep(this.state.insert);
@@ -109,7 +108,14 @@ class Supermarket extends React.Component{
       if(response.data.success===true){
         this.setState({
           loading:true,
-          insert:{}
+          insert:{
+            id:0,
+            date:null,
+            amountTotal:0,
+            allDepts:[],
+            notes:''
+          },
+          allDepts:[]
         });
         this.getData();
       }
@@ -160,7 +166,7 @@ class Supermarket extends React.Component{
                   className="k-button k-primary"> Add </button>
               </div>
               <div className="col-lg-6">
-                <button onClick={this.insertAll} disabled={allDepts.length===0 || insert.date===null}
+                <button style={{float:'right'}} onClick={this.insertAll} disabled={allDepts.length===0 || insert.date===null}
                   className="k-button k-primary"> Submit </button>
               </div>
             </div>
@@ -214,7 +220,6 @@ class Supermarket extends React.Component{
           </div>
           </article>
         </div>
-
       </div>
     )
   }

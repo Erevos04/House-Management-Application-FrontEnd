@@ -4,7 +4,6 @@ import { Grid, GridColumn as Column } from '@progress/kendo-react-grid';
 import { DatePicker } from '@progress/kendo-react-dateinputs';
 import { Input, NumericTextBox } from '@progress/kendo-react-inputs';
 import DropDown from './UI/DropDown';
-import '@progress/kendo-theme-bootstrap/dist/all.css';
 import Loading from './UI/Loading.js';
 import { cloneDeep } from 'lodash';
 import { format, getMonth, getYear } from 'date-fns';
@@ -84,6 +83,28 @@ class Summary extends React.Component{
             console.log(response.data)
         })
     }
+
+    getCategories=()=>{
+        axios.post('api/getMonthSupermarketCategories',{date:new Date()}).then(response=>{
+          const freskaTotal = sumBy(response.data.data.monthlyFreska,'amount')
+          const kreataTotal = sumBy(response.data.data.monthlyKreata,'amount')
+          const xartiktaTotal = sumBy(response.data.data.monthlyXartika,'amount')
+          const loipaTotal = sumBy(response.data.data.monthlyLoipa,'amount')
+          const katharistikaTotal = sumBy(response.data.data.monthlyKatharistika,'amount')
+          const trofimaTotal = sumBy(response.data.data.monthlyTrofima,'amount')
+    
+          this.setState({
+            deptsMonthlyTotal : [
+              {'ΦΡΕΣΚΑ' : freskaTotal},
+              {'ΧΑΡΤΙΚΑ' : xartiktaTotal},
+              {'ΚΑΘΑΡΙΣΤΙΚΑ' : katharistikaTotal},
+              {'ΚΡΕΑΤΑ/ΨΑΡΙΑ' : kreataTotal},
+              {'ΤΡΟΦΙΜΑ' :trofimaTotal},
+              {'ΛΟΙΠΑ' :loipaTotal}
+            ]
+          })
+        })
+      }
       
     onChange=(e)=>{
         let temp = cloneDeep(this.state.filter);
